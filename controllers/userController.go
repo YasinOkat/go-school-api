@@ -28,11 +28,15 @@ func CreateUser(c *gin.Context) {
 	}
 
 	err := services.CreateUser(user)
+	if err == services.ErrUsernameExists {
+		c.JSON(http.StatusConflict, models.ErrorResponse{Error: "username already exists"})
+		return
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusCreated, "User created successfully")
+	c.JSON(http.StatusCreated, "user created successfully")
 }
 
 // DeleteUser godoc
@@ -43,16 +47,22 @@ func CreateUser(c *gin.Context) {
 // @Param id path int true "User ID"
 // @Success 204
 // @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse "user not found"
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/{id} [delete]
 func DeleteUser(c *gin.Context) {
 	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "Invalid user ID"})
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "invalid user ID"})
 		return
 	}
 
 	err = services.DeleteUser(uint(userID))
+
+	if err == services.ErrUserNotFound {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "user not found"})
+		return
+	}
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
 		return

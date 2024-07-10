@@ -1,21 +1,25 @@
 package utils
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
-var DB *gorm.DB
+var DB *sql.DB
 
 func ConnectDatabase() {
 	dsn := os.Getenv("DATABASE_URI")
-	database, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	var err error
+	DB, err = sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatal("Failed to connect to database!", err)
 	}
 
-	DB = database
+	err = DB.Ping()
+	if err != nil {
+		log.Fatal("Failed to verify connection to database!", err)
+	}
 }

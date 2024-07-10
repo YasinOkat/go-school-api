@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type UserTypeID uint
 
 const (
@@ -24,19 +20,13 @@ type UserCreate struct {
 }
 
 type User struct {
-	Id          string     `gorm:"primary_key;auto_increment" json:"id"`
-	Username    string     `gorm:"unique;not null" json:"username"`
-	Password    string     `gorm:"not null" json:"password"`
-	FirstName   string     `gorm:"not null" json:"first_name"`
-	LastName    string     `gorm:"not null" json:"last_name"`
-	PhoneNumber string     `gorm:"not null" json:"phone_number"`
-	Email       string     `gorm:"not null" json:"email"`
-	UserTypeID  UserTypeID `gorm:"not null" json:"user_type_id"`
-	Status      bool       `gorm:"not null;default:true" json:"status"`
-	CreatedAt   time.Time  `gorm:"-" json:"created_at,omitempty"`
-	UpdatedAt   time.Time  `gorm:"-" json:"updated_at,omitempty"`
-}
-
-func (User) TableName() string {
-	return "user"
+	ID          uint       `json:"id"`
+	Username    string     `json:"username"`
+	Password    string     `json:"password"`
+	FirstName   string     `json:"first_name"`
+	LastName    string     `json:"last_name"`
+	PhoneNumber string     `json:"phone_number"`
+	Email       string     `json:"email"`
+	UserTypeID  UserTypeID `json:"user_type_id"`
+	Status      bool       `json:"status"`
 }
