@@ -69,6 +69,44 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/users/{id}": {
+            "delete": {
+                "description": "Delete a user by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Delete a user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -82,6 +120,15 @@ const docTemplate = `{
         },
         "models.UserCreate": {
             "type": "object",
+            "required": [
+                "email",
+                "first_name",
+                "last_name",
+                "password",
+                "phone_number",
+                "user_type_id",
+                "username"
+            ],
             "properties": {
                 "email": {
                     "type": "string"
@@ -112,9 +159,9 @@ const docTemplate = `{
         "models.UserTypeID": {
             "type": "integer",
             "enum": [
-                1,
+                3,
                 2,
-                3
+                1
             ],
             "x-enum-varnames": [
                 "Admin",

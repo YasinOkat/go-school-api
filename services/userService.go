@@ -26,3 +26,7 @@ func CreateUser(userCreate models.UserCreate) error {
 	err = repositories.CreateUser(user)
 	return err
 }
+
+func DeleteUser(userID uint) error {
+	return repositories.DeleteUser(userID)
+}

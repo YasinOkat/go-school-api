@@ -23,12 +23,20 @@ definitions:
         $ref: '#/definitions/models.UserTypeID'
       username:
         type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - phone_number
+    - user_type_id
+    - username
     type: object
   models.UserTypeID:
     enum:
-    - 1
-    - 2
     - 3
+    - 2
+    - 1
     type: integer
     x-enum-varnames:
     - Admin
@@ -76,6 +84,31 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Delete a user
       tags:
       - users
 swagger: "2.0"

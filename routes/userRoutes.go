@@ -9,5 +9,6 @@ func RegisterUserRoutes(router *gin.Engine) {
 	userRoutes := router.Group("/users")
 	{
 		userRoutes.POST("/", controllers.CreateUser)
+		userRoutes.DELETE("/:id", controllers.DeleteUser)
 	}
 }
