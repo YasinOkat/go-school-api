@@ -3,7 +3,7 @@ package middlewares
 import (
 	"net/http"
 
-	"github.com/YasinOkat/go-school-api/models"
+	"github.com/YasinOkat/go-school-api/repositories"
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,28 +26,22 @@ func StudentMiddleware() gin.HandlerFunc {
 		}
 
 		if int(userTypeID) == 1 {
-			studentID, err := getStudentIDFromRequestBody(c)
+			studentIDDB, err := repositories.GetStudentIDByUserID(int(userID))
 			if err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 				c.Abort()
 				return
 			}
 
-			if int(userID) == studentID {
-				c.Next()
-				return
-			}
+			c.Set("studentIDDB", studentIDDB)
+			c.Next()
+			return
+		} else {
+			c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+			c.Abort()
+			return
 		}
 
-		c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
 		c.Abort()
 	}
-}
-
-func getStudentIDFromRequestBody(c *gin.Context) (int, error) {
-	var studentCourse models.StudentCourseSelect
-	if err := c.ShouldBindJSON(&studentCourse); err != nil {
-		return 0, err
-	}
-	return studentCourse.StudentID, nil
 }

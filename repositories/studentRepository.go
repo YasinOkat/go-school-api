@@ -87,3 +87,18 @@ func SelectCourse(studentCourseSelect models.StudentCourseSelect) error {
 
 	return err
 }
+
+func GetStudentIDByUserID(studentID int) (int, error) {
+	var id int
+	query := `
+	SELECT id from student WHERE user_id = (?)
+	`
+	err := utils.DB.QueryRow(query, studentID).Scan(&id)
+	if err == sql.ErrNoRows {
+		return 0, nil
+	}
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
