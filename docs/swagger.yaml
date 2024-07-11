@@ -5,6 +5,42 @@ definitions:
       error:
         type: string
     type: object
+  models.LoginInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  models.TokenResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  models.User:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      password:
+        type: string
+      phone_number:
+        type: string
+      status:
+        type: boolean
+      user_type_id:
+        $ref: '#/definitions/models.UserTypeID'
+      username:
+        type: string
+    type: object
   models.UserCreate:
     properties:
       email:
@@ -56,6 +92,32 @@ info:
   title: School Management API
   version: "1.0"
 paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login with username and password
+      parameters:
+      - description: Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenResponse'
+        "401":
+          description: Invalid credentials
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Login to get a JWT token
+      tags:
+      - auth
   /users:
     post:
       consumes:
@@ -79,11 +141,41 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: username already exists
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new user
+      tags:
+      - users
+  /users/:
+    get:
+      description: Fetch All users
+      parameters:
+      - description: Filter by active users
+        in: query
+        name: active
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Fetch all users
       tags:
       - users
   /users/{id}:

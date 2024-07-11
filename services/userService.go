@@ -41,6 +41,10 @@ func CreateUser(userCreate models.UserCreate) error {
 	return err
 }
 
+func GetUsers(filterByActive bool) ([]models.User, error) {
+	return repositories.GetUsers(filterByActive)
+}
+
 func DeleteUser(userID uint) error {
 	user, err := repositories.GetUserByID(userID)
 	if err != nil {

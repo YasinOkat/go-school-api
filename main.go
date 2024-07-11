@@ -29,6 +29,8 @@ func main() {
 
 	utils.ConnectDatabase()
 
+	gin.SetMode(gin.DebugMode)
+
 	router := gin.Default()
 
 	routes.RegisterUserRoutes(router)
