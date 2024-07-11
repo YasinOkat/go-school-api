@@ -15,6 +15,29 @@ definitions:
     - password
     - username
     type: object
+  models.StudentUserCreate:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      majorID:
+        type: integer
+      password:
+        type: string
+      phone_number:
+        type: string
+      status:
+        type: boolean
+      user_type_id:
+        $ref: '#/definitions/models.UserTypeID'
+      username:
+        type: string
+    required:
+    - majorID
+    type: object
   models.TokenResponse:
     properties:
       token:
@@ -118,6 +141,40 @@ paths:
       summary: Login to get a JWT token
       tags:
       - auth
+  /students:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the input payload
+      parameters:
+      - description: Create Student
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.StudentUserCreate'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.StudentUserCreate'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: username already exists
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Create a new student
+      tags:
+      - students
   /users:
     post:
       consumes:

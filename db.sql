@@ -15,10 +15,14 @@ VALUES ('student'),
 CREATE TABLE major
 (
     id            INT PRIMARY KEY AUTO_INCREMENT,
-    name          VARCHAR(255) NOT NULL,
-    department_id INT          NOT NULL
+    name          VARCHAR(255) NOT NULL
 );
 
+INSERT INTO major (name)
+VALUES ('Electrical & Electronics Engineering'),
+       ('Computer Engineering'),
+       ('Mechanical Engineering'),
+       ('Chemical Engineering');
 
 CREATE TABLE user
 (
@@ -54,6 +58,18 @@ CREATE TABLE course
     name VARCHAR(255)
 );
 
+INSERT INTO course (name)
+VALUES ('Chemistry'),
+       ('Calculus I'),
+       ('Calculus II'),
+       ('Electromagnetics'),
+       ('Fluid Mechanics'),
+       ('Theory of Structures'),
+       ('Circuit Analysis'),
+       ('Data Structures'),
+       ('Physics I'),
+       ('Physics II');
+
 CREATE TABLE major_course
 (
     major_id  INT NOT NULL,
@@ -62,6 +78,21 @@ CREATE TABLE major_course
     FOREIGN KEY (course_id) REFERENCES course (id),
     PRIMARY KEY (major_id, course_id)
 );
+
+INSERT INTO major_course (major_id, course_id)
+VALUES  (1, 2),
+        (1, 3),
+        (1, 4),
+        (1, 7),
+        (1, 9),
+        (1, 10),
+        (2, 1),
+        (2, 2),
+        (2, 3),
+        (2, 8),
+        (3, 5),
+        (4, 2),
+        (4, 3);
 
 CREATE TABLE student_course
 (

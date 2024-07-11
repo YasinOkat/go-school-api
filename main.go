@@ -34,6 +34,7 @@ func main() {
 	router := gin.Default()
 
 	routes.RegisterUserRoutes(router)
+	routes.RegisterStudentRoutes(router)
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
