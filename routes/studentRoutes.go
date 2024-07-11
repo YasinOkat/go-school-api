@@ -10,5 +10,7 @@ func RegisterStudentRoutes(router *gin.Engine) {
 	studentRoutes := router.Group("/students").Use(middlewares.AuthMiddleware())
 	{
 		studentRoutes.POST("/", middlewares.AdminMiddleware(), controllers.CreateStudent)
+		studentRoutes.GET("/", middlewares.AdminMiddleware(), controllers.GetStudents)
+		studentRoutes.POST("/courses", middlewares.StudentMiddleware(), controllers.SelectCourse)
 	}
 }

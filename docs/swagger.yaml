@@ -15,6 +15,27 @@ definitions:
     - password
     - username
     type: object
+  models.StudentCourseSelect:
+    properties:
+      courseID:
+        type: integer
+      studentID:
+        type: integer
+    required:
+    - courseID
+    - studentID
+    type: object
+  models.StudentRead:
+    properties:
+      id:
+        type: integer
+      majorID:
+        type: integer
+      status:
+        type: boolean
+      userID:
+        type: integer
+    type: object
   models.StudentUserCreate:
     properties:
       email:
@@ -173,6 +194,62 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Create a new student
+      tags:
+      - students
+  /students/:
+    get:
+      description: Fetch All students
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.StudentRead'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Fetch all students
+      tags:
+      - students
+  /students/courses:
+    post:
+      consumes:
+      - application/json
+      description: Select a course for a student if the course matches the student's
+        major
+      parameters:
+      - description: Select Course
+        in: body
+        name: studentCourse
+        required: true
+        schema:
+          $ref: '#/definitions/models.StudentCourseSelect'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: course selected successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "409":
+          description: course does not match student's major
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Select a course for a student
       tags:
       - students
   /users:

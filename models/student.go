@@ -1,5 +1,12 @@
 package models
 
+type StudentRead struct {
+	ID      int  `json:"id"`
+	UserID  int  `json:"userID"`
+	MajorID int  `json:"majorID"`
+	Status  bool `json:"status"`
+}
+
 type StudentCreate struct {
 	UserID  int  `json:"userID" binding:"required"`
 	MajorID int  `json:"majorID" binding:"required"`
@@ -16,4 +23,9 @@ type StudentUserCreate struct {
 	Email       string     `json:"email"`
 	UserTypeID  UserTypeID `json:"user_type_id"`
 	Status      bool       `json:"status"`
+}
+
+type StudentCourseSelect struct {
+	StudentID int `json:"studentID" binding:"required"`
+	CourseID  int `json:"courseID" binding:"required"`
 }

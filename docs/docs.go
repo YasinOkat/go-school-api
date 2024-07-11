@@ -116,6 +116,90 @@ const docTemplate = `{
                 }
             }
         },
+        "/students/": {
+            "get": {
+                "description": "Fetch All students",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "Fetch all students",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.StudentRead"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/students/courses": {
+            "post": {
+                "description": "Select a course for a student if the course matches the student's major",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "students"
+                ],
+                "summary": "Select a course for a student",
+                "parameters": [
+                    {
+                        "description": "Select Course",
+                        "name": "studentCourse",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.StudentCourseSelect"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "course selected successfully",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "409": {
+                        "description": "course does not match student's major",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/models.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "post": {
                 "description": "Create a new user with the input payload",
@@ -274,6 +358,38 @@ const docTemplate = `{
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "models.StudentCourseSelect": {
+            "type": "object",
+            "required": [
+                "courseID",
+                "studentID"
+            ],
+            "properties": {
+                "courseID": {
+                    "type": "integer"
+                },
+                "studentID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.StudentRead": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "majorID": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "userID": {
+                    "type": "integer"
                 }
             }
         },
