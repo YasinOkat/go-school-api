@@ -56,3 +56,15 @@ func DeleteUser(userID uint) error {
 
 	return repositories.DeleteUser(userID)
 }
+
+func GetUserByID(userID uint) (*models.User, error) {
+	user, err := repositories.GetUserByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, ErrUserNotFound
+	}
+
+	return user, nil
+}

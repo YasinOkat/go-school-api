@@ -29,3 +29,10 @@ type StudentCourseSelect struct {
 	StudentID int `json:"studentID" binding:"required"`
 	CourseID  int `json:"courseID" binding:"required"`
 }
+
+type StudentCourse struct {
+	StudentID  int    `json:"studentID" binding:"required"`
+	CourseID   int    `json:"courseID" `
+	Username   string `json:"username" binding:"required"`
+	CourseName string `json:"courseName" `
+}

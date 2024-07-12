@@ -11,6 +11,7 @@ func RegisterStudentRoutes(router *gin.Engine) {
 	{
 		studentRoutes.POST("/", middlewares.AdminMiddleware(), controllers.CreateStudent)
 		studentRoutes.GET("/", middlewares.AdminMiddleware(), controllers.GetStudents)
-		studentRoutes.POST("/courses", middlewares.StudentMiddleware(), controllers.SelectCourse)
+		studentRoutes.POST("/:id/courses", middlewares.StudentMiddleware(), controllers.SelectCourse)
+		studentRoutes.GET("/:id/courses", middlewares.StudentMiddleware(), controllers.GetStudentCourses)
 	}
 }

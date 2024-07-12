@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/YasinOkat/go-school-api/repositories"
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,14 @@ func StudentMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		requestedStudentID, err := strconv.Atoi(c.Param("id"))
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid student ID"})
+			c.Abort()
+			return
+		}
+
 		if int(userTypeID) == 1 {
 			studentIDDB, err := repositories.GetStudentIDByUserID(int(userID))
 			if err != nil {
@@ -33,7 +42,11 @@ func StudentMiddleware() gin.HandlerFunc {
 				return
 			}
 
-			c.Set("studentIDDB", studentIDDB)
+			if requestedStudentID != studentIDDB {
+				c.JSON(http.StatusForbidden, gin.H{"error": "Permission denied"})
+				c.Abort()
+				return
+			}
 			c.Next()
 			return
 		} else {
@@ -41,7 +54,5 @@ func StudentMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
-		c.Abort()
 	}
 }

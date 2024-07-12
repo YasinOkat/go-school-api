@@ -25,6 +25,19 @@ func CreateStudent(studentCreate models.StudentCreate) error {
 func GetStudents() ([]models.StudentRead, error) {
 	return repositories.GetStudents()
 }
+
+func GetStudentCourses(studentID int) ([]models.StudentCourse, error) {
+	studentCourse, err := repositories.GetStudentCourses(studentID)
+
+	if err != nil {
+		return nil, err
+	}
+	if studentCourse == nil {
+		return nil, ErrStudentDoesNotExist
+	}
+	return studentCourse, err
+}
+
 func SelectCourse(studentCourseSelect models.StudentCourseSelect) error {
 	studentMajorID, err := repositories.GetStudentMajor(studentCourseSelect.StudentID)
 	if err != nil {

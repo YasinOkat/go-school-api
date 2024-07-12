@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/YasinOkat/go-school-api/models"
 	"github.com/YasinOkat/go-school-api/services"
@@ -74,7 +75,7 @@ func CreateStudent(c *gin.Context) {
 // @Description Fetch All students
 // @Tags students
 // @Produce  json
-// @Success 200 {object} models.StudentRead
+// @Success 200 {object} []models.StudentRead
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /students/ [get]
@@ -85,6 +86,38 @@ func GetStudents(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, students)
+}
+
+// GetStudentCourses godoc
+// @Summary Get student courses
+// @Description Get student courses
+// @Tags students
+// @Produce  json
+// @Param id path int true "Student ID"
+// @Success 200 {object} []models.StudentCourse
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse "student not found"
+// @Failure 500 {object} models.ErrorResponse
+// @Router /students/{id}/courses [get]
+func GetStudentCourses(c *gin.Context) {
+	studentID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "invalid student ID"})
+		return
+	}
+
+	studentCourse, err := services.GetStudentCourses(studentID)
+
+	if err == services.ErrUserNotFound {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "student not found"})
+		return
+	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, studentCourse)
 }
 
 // SelectCourse godoc

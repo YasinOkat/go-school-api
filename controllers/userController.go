@@ -108,13 +108,45 @@ func DeleteUser(c *gin.Context) {
 	c.Status(http.StatusNoContent)
 }
 
+// GetUserByID godoc
+// @Summary Get a user
+// @Description Get a user by ID
+// @Tags users
+// @Produce  json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 404 {object} models.ErrorResponse "user not found"
+// @Failure 500 {object} models.ErrorResponse
+// @Router /users/{id} [get]
+func GetUserByID(c *gin.Context) {
+	userID, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: "invalid user ID"})
+		return
+	}
+
+	user, err := services.GetUserByID(uint(userID))
+
+	if err == services.ErrUserNotFound {
+		c.JSON(http.StatusNotFound, models.ErrorResponse{Error: "user not found"})
+		return
+	}
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, user)
+}
+
 // GetUsers godoc
 // @Summary Fetch all users
 // @Description Fetch All users
 // @Tags users
 // @Produce  json
 // @Param active query bool false "Filter by active users"
-// @Success 200 {object} models.User
+// @Success 200 {object} []models.User
 // @Failure 400 {object} models.ErrorResponse
 // @Failure 500 {object} models.ErrorResponse
 // @Router /users/ [get]

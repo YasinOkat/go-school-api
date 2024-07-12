@@ -9,6 +9,8 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// export PATH=$PATH:$(go env GOPATH)/bin
+
 // @title           School Management API
 // @version         1.0
 // @description     This is a sample school management server.

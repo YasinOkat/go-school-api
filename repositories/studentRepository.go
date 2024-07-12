@@ -73,6 +73,47 @@ func GetCourseMajor(courseID int) (int, error) {
 	return majorID, nil
 }
 
+func GetStudentCourses(studentID int) ([]models.StudentCourse, error) {
+	query := `
+	SELECT
+		s.id AS StudentID,
+		c.id AS CourseID,
+		u.username AS Username,
+		c.name AS CourseName
+	FROM
+		student s
+	LEFT JOIN
+		user u ON u.id = s.user_id
+	LEFT JOIN
+		student_course sc ON sc.student_id = s.id
+	LEFT JOIN
+		course c ON c.id = sc.course_id
+	WHERE
+		s.id = (?);
+	`
+	rows, err := utils.DB.Query(query, studentID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var studentCourse []models.StudentCourse
+	for rows.Next() {
+		var student models.StudentCourse
+		err := rows.Scan(&student.StudentID, &student.CourseID, &student.Username, &student.CourseName)
+		if err != nil {
+			return nil, err
+		}
+		studentCourse = append(studentCourse, student)
+	}
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	return studentCourse, nil
+}
+
 func SelectCourse(studentCourseSelect models.StudentCourseSelect) error {
 	query := `
 	INSERT INTO 
