@@ -132,7 +132,7 @@ func GetStudentCourses(c *gin.Context) {
 // @Failure 404 {object} models.ErrorResponse "student does not exist"
 // @Failure 409 {object} models.ErrorResponse "course does not match student's major"
 // @Failure 500 {object} models.ErrorResponse
-// @Router /students/courses [post]
+// @Router /students/{id}/courses [post]
 func SelectCourse(c *gin.Context) {
 	var studentCourse models.StudentCourseSelect
 	if err := c.ShouldBindJSON(&studentCourse); err != nil {
@@ -155,4 +155,31 @@ func SelectCourse(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, "course selected successfully")
+}
+
+// GradeStudent godoc
+// @Summary Assign a grade to a student
+// @Description Assign a grade to a student for a specific course
+// @Tags students
+// @Accept  json
+// @Produce  json
+// @Param grade body models.Grade true "Assign Grade"
+// @Success 200 {object} string "message": "Grade assigned successfully"
+// @Failure 400 {object} models.ErrorResponse
+// @Failure 500 {object} models.ErrorResponse
+// @Router /students/grade [post]
+func GradeStudent(c *gin.Context) {
+	var grade models.Grade
+	if err := c.ShouldBindJSON(&grade); err != nil {
+		c.JSON(http.StatusBadRequest, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	err := services.AssignGrade(grade)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.ErrorResponse{Error: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "grade assigned successfully"})
 }

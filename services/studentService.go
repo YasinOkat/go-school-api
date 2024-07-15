@@ -63,3 +63,24 @@ func SelectCourse(studentCourseSelect models.StudentCourseSelect) error {
 
 	return nil
 }
+
+func AssignGrade(assignGrade models.Grade) error {
+	studentMajorID, err := repositories.GetStudentMajor(assignGrade.StudentID)
+	if err != nil {
+		return err
+	}
+	courseMajorID, err := repositories.GetCourseMajor(assignGrade.CourseID)
+	if err != nil {
+		return err
+	}
+
+	if studentMajorID == 0 {
+		return ErrStudentDoesNotExist
+	}
+
+	if studentMajorID != courseMajorID {
+		return ErrCourseMajorMismatch
+	}
+
+	return repositories.AssignGrade(assignGrade)
+}

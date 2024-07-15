@@ -5,6 +5,19 @@ definitions:
       error:
         type: string
     type: object
+  models.Grade:
+    properties:
+      courseID:
+        type: integer
+      grade:
+        type: number
+      studentID:
+        type: integer
+    required:
+    - courseID
+    - grade
+    - studentID
+    type: object
   models.LoginInput:
     properties:
       password:
@@ -219,7 +232,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.StudentRead'
+            items:
+              $ref: '#/definitions/models.StudentRead'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -246,7 +261,9 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.StudentCourse'
+            items:
+              $ref: '#/definitions/models.StudentCourse'
+            type: array
         "400":
           description: Bad Request
           schema:
@@ -262,7 +279,6 @@ paths:
       summary: Get student courses
       tags:
       - students
-  /students/courses:
     post:
       consumes:
       - application/json
@@ -299,6 +315,36 @@ paths:
           schema:
             $ref: '#/definitions/models.ErrorResponse'
       summary: Select a course for a student
+      tags:
+      - students
+  /students/grade:
+    post:
+      consumes:
+      - application/json
+      description: Assign a grade to a student for a specific course
+      parameters:
+      - description: Assign Grade
+        in: body
+        name: grade
+        required: true
+        schema:
+          $ref: '#/definitions/models.Grade'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'message": "Grade assigned successfully'
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Assign a grade to a student
       tags:
       - students
   /users:

@@ -30,6 +30,12 @@ type StudentCourseSelect struct {
 	CourseID  int `json:"courseID" binding:"required"`
 }
 
+type Grade struct {
+	StudentID int     `json:"studentID" binding:"required"`
+	CourseID  int     `json:"courseID" binding:"required"`
+	Grade     float64 `json:"grade" binding:"required"`
+}
+
 type StudentCourse struct {
 	StudentID  int    `json:"studentID" binding:"required"`
 	CourseID   int    `json:"courseID" `

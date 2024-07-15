@@ -73,6 +73,12 @@ func GetCourseMajor(courseID int) (int, error) {
 	return majorID, nil
 }
 
+func AssignGrade(assignGrade models.Grade) error {
+	query := "INSERT INTO student_course SET grade = ? WHERE student_id = ? AND course_id = ?"
+	_, err := utils.DB.Exec(query, assignGrade.Grade, assignGrade.StudentID, assignGrade.CourseID)
+	return err
+}
+
 func GetStudentCourses(studentID int) ([]models.StudentCourse, error) {
 	query := `
 	SELECT
